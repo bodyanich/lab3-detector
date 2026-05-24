@@ -3,6 +3,7 @@ package processor
 import (
 	"fmt"
 	"regexp"
+	"strings"
 	"sync"
 	"time"
 )
@@ -11,6 +12,7 @@ var (
 	// LeakCache intentionally grows forever in leaky mode.
 	// It is used to demonstrate heap profiling in Lab 3.
 	LeakCache = make(map[string][]byte)
+	leakMu    sync.Mutex
 
 	fixedCacheMu sync.Mutex
 	fixedCache   = make(map[string][]byte)
@@ -53,7 +55,10 @@ func processImageLeaky(workerID int) bool {
 	matched, _ := regexp.MatchString(`^image_data_\d+_timestamp_\d+$`, data)
 	if matched {
 		key := fmt.Sprintf("key_%d", time.Now().UnixNano())
+
+		leakMu.Lock()
 		LeakCache[key] = make([]byte, 1024*10) // 10 KB leaked per processed image.
+		leakMu.Unlock()
 	}
 
 	return matched
@@ -70,6 +75,23 @@ func processImageFixed(workerID int) bool {
 	}
 
 	return matched
+}
+
+func processImageSlow(workerID int) {
+	data := fmt.Sprintf("image_data_%d_timestamp_%d", workerID, time.Now().UnixNano())
+
+	matched, _ := regexp.MatchString(`^image_data_\d+_timestamp_\d+$`, data)
+	if matched {
+		_ = strings.ToUpper(data)
+	}
+}
+
+func processImageOptimized(workerID int) {
+	data := fmt.Sprintf("image_data_%d_timestamp_%d", workerID, time.Now().UnixNano())
+
+	if imageDataPattern.MatchString(data) {
+		_ = strings.ToUpper(data)
+	}
 }
 
 func storeBounded(key string, value []byte) {

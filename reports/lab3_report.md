@@ -30,10 +30,6 @@ lab3-detector/
 └── go.mod
 ```
 
-**Місце для скріншота 1:** вставити скріншот структури проєкту у VS Code.
-
-![Скріншот 1 — структура проєкту](screenshots/01_project_structure.png)
-
 ---
 
 ## 3. Етап 1 — Виявлення витоку памʼяті за допомогою Heap Profiling
@@ -64,17 +60,9 @@ go tool pprof -proto -output=heap2.pb.gz http://localhost:6060/debug/pprof/heap
 go tool pprof -http=:8081 -base=heap1.pb.gz heap2.pb.gz
 ```
 
-**Місце для скріншота 2:** вставити скріншот першого heap-профілю або команди створення `heap1.pb.gz`.
+![Скріншот 1 — перший heap profile](screenshots/02_heap_profile_1.png)
 
-![Скріншот 2 — перший heap profile](screenshots/02_heap_profile_1.png)
-
-**Місце для скріншота 3:** вставити скріншот другого heap-профілю або команди створення `heap2.pb.gz`.
-
-![Скріншот 3 — другий heap profile](screenshots/03_heap_profile_2.png)
-
-**Місце для скріншота 4:** вставити скріншот `pprof` з порівнянням через `-base`, де видно функцію `processImageLeaky`.
-
-![Скріншот 4 — порівняння heap профілів](screenshots/04_heap_base_comparison.png)
+![Скріншот 2 — порівняння heap профілів](screenshots/04_heap_base_comparison.png)
 
 ### Аналіз причини витоку
 
@@ -96,8 +84,6 @@ LeakCache[key] = make([]byte, 1024*10)
 go run ./cmd/service -mode=fixed
 ```
 
-**Місце для скріншота 5:** вставити скріншот запуску виправленої версії сервісу.
-
 ![Скріншот 5 — fixed mode](screenshots/05_fixed_mode.png)
 
 ---
@@ -116,8 +102,6 @@ $env:RUN_UNSAFE_RACE="1"
 go test -race -v ./internal/stats -run TestUnsafeCounterRace
 Remove-Item Env:RUN_UNSAFE_RACE
 ```
-
-**Місце для скріншота 6:** вставити лог race detector до виправлення, де видно `WARNING: DATA RACE`.
 
 ![Скріншот 6 — race detector до виправлення](screenshots/06_race_before.png)
 
@@ -147,8 +131,6 @@ c.values[imageType]++
 go test -race -v ./...
 ```
 
-**Місце для скріншота 7:** вставити успішний запуск `go test -race -v ./...` після виправлення.
-
 ![Скріншот 7 — race detector після виправлення](screenshots/07_race_after.png)
 
 ---
@@ -168,8 +150,6 @@ regexp.MatchString(`^image_data_\d+_timestamp_\d+$`, data)
 ```bash
 go tool pprof -http=:8082 http://localhost:6060/debug/pprof/profile?seconds=30
 ```
-
-**Місце для скріншота 8:** вставити скріншот CPU profile або flame graph, де видно витрати на regexp.
 
 ![Скріншот 8 — CPU profile](screenshots/08_cpu_profile.png)
 
@@ -195,9 +175,8 @@ matched := imageDataPattern.MatchString(data)
 go test -bench=. -benchmem ./internal/processor
 ```
 
-**Місце для скріншота 9:** вставити результат benchmark-тестів, де видно різницю між `BenchmarkProcessImageSlow` та `BenchmarkProcessImageOptimized`.
-
-![Скріншот 9 — benchmark results](screenshots/09_benchmark_results.png)
+![Скріншот 9 — benchmark results](screenshots/1.png)
+![Скріншот 9 — benchmark results](screenshots/2.png)
 
 ### Висновок щодо продуктивності
 
@@ -221,11 +200,7 @@ dlv debug ./cmd/service --headless --listen=:40000 --api-version=2 --accept-mult
 
 Після цього у VS Code було використано конфігурацію `.vscode/launch.json` для підключення до процесу на порту `40000`.
 
-**Місце для скріншота 10:** вставити скріншот термінала із запущеним `dlv --headless`.
-
 ![Скріншот 10 — dlv headless](screenshots/10_dlv_headless.png)
-
-**Місце для скріншота 11:** вставити скріншот VS Code, підключеного до Delve debugger.
 
 ![Скріншот 11 — VS Code remote attach](screenshots/11_vscode_attach.png)
 

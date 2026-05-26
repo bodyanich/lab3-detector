@@ -6,7 +6,10 @@ import (
 	"regexp"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
+
+	"go.uber.org/zap"
 )
 
 var (
@@ -19,9 +22,24 @@ var (
 	fixedCache   = make(map[string][]byte)
 
 	imageDataPattern = regexp.MustCompile(`^image_data_\d+_timestamp_\d+$`)
+
+	processedImages atomic.Uint64
 )
 
 const maxFixedCacheItems = 100
+
+func logProcessedImage(workerID int, mode string) {
+	processedCount := processedImages.Add(1)
+
+	if processedCount%1000 == 0 {
+		zap.L().Info(
+			"images processed",
+			zap.Uint64("processed_count", processedCount),
+			zap.Int("worker_id", workerID),
+			zap.String("mode", mode),
+		)
+	}
+}
 
 // RunLeakyWorkerPool starts worker goroutines that intentionally leak memory.
 func RunLeakyWorkerPool(count int) {
@@ -62,6 +80,8 @@ func processImageLeaky(workerID int) bool {
 		leakMu.Lock()
 		LeakCache[key] = make([]byte, 1024*10) // 10 KB leaked per processed image.
 		leakMu.Unlock()
+
+		logProcessedImage(workerID, "leaky")
 	}
 
 	return matched
@@ -75,6 +95,8 @@ func processImageFixed(workerID int) bool {
 	if matched {
 		key := fmt.Sprintf("key_%d", time.Now().UnixNano())
 		storeBounded(key, make([]byte, 1024*10))
+
+		logProcessedImage(workerID, "fixed")
 	}
 
 	return matched

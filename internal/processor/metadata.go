@@ -1,3 +1,4 @@
+// Package processor contains image metadata processing logic used for profiling experiments.
 package processor
 
 import (
@@ -22,6 +23,7 @@ var (
 
 const maxFixedCacheItems = 100
 
+// RunLeakyWorkerPool starts worker goroutines that intentionally leak memory.
 func RunLeakyWorkerPool(count int) {
 	for i := 0; i < count; i++ {
 		go func(id int) {
@@ -35,6 +37,7 @@ func RunLeakyWorkerPool(count int) {
 	select {}
 }
 
+// RunFixedWorkerPool starts worker goroutines with optimized processing and bounded memory usage.
 func RunFixedWorkerPool(count int) {
 	for i := 0; i < count; i++ {
 		go func(id int) {
@@ -77,21 +80,28 @@ func processImageFixed(workerID int) bool {
 	return matched
 }
 
-func processImageSlow(workerID int) {
+// ProcessImageSlowForBenchmark runs the slow image processing path for benchmark tests.
+func ProcessImageSlowForBenchmark(workerID int) bool {
 	data := fmt.Sprintf("image_data_%d_timestamp_%d", workerID, time.Now().UnixNano())
 
 	matched, _ := regexp.MatchString(`^image_data_\d+_timestamp_\d+$`, data)
 	if matched {
 		_ = strings.ToUpper(data)
 	}
+
+	return matched
 }
 
-func processImageOptimized(workerID int) {
+// ProcessImageOptimizedForBenchmark runs the optimized image processing path for benchmark tests.
+func ProcessImageOptimizedForBenchmark(workerID int) bool {
 	data := fmt.Sprintf("image_data_%d_timestamp_%d", workerID, time.Now().UnixNano())
 
 	if imageDataPattern.MatchString(data) {
 		_ = strings.ToUpper(data)
+		return true
 	}
+
+	return false
 }
 
 func storeBounded(key string, value []byte) {
@@ -106,17 +116,4 @@ func storeBounded(key string, value []byte) {
 	}
 
 	fixedCache[key] = value
-}
-
-func ProcessImageSlowForBenchmark(workerID int) bool {
-	data := fmt.Sprintf("image_data_%d_timestamp_%d", workerID, time.Now().UnixNano())
-	matched, _ := regexp.MatchString(`^image_data_\d+_timestamp_\d+$`, data)
-
-	return matched
-}
-
-func ProcessImageOptimizedForBenchmark(workerID int) bool {
-	data := fmt.Sprintf("image_data_%d_timestamp_%d", workerID, time.Now().UnixNano())
-
-	return imageDataPattern.MatchString(data)
 }

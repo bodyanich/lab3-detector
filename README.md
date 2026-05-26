@@ -1,4 +1,5 @@
 # Lab 3 — Go Diagnostics and Refactoring
+![Go CI](https://github.com/bodyanich/lab3-detector/actions/workflows/ci.yml/badge.svg)
 
 This repository contains a training service named **Image Metadata Processor** for Lab 3.
 The project demonstrates:

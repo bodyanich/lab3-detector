@@ -1,6 +1,8 @@
 # Lab 3 — Go Diagnostics and Refactoring
 ![Go CI](https://github.com/bodyanich/lab3-detector/actions/workflows/ci.yml/badge.svg)
 
+The service uses `zap` for structured logging of processed image counts.
+
 This repository contains a training service named **Image Metadata Processor** for Lab 3.
 The project demonstrates:
 

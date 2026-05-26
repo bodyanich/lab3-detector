@@ -1,3 +1,4 @@
+// Package main starts the image metadata processor service.
 package main
 
 import (

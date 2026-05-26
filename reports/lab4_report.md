@@ -49,13 +49,11 @@ Workflow запускається при `push` та `pull_request` у гілк�
 
 **Скріншот 2 — файл `ci.yml`**
 
-> Вставити скріншот: `reports/screenshots/02_ci_yml.png`
 
 ![CI workflow](screenshots/02_ci_yml.png)
 
 **Скріншот 3 — успішне проходження GitHub Actions**
 
-> Вставити скріншот: `reports/screenshots/03_ci_success.png`
 
 ![CI success](screenshots/03_ci_success.png)
 
@@ -80,7 +78,6 @@ Settings → Branches → Branch protection rules
 
 **Скріншот 4 — налаштоване Branch Protection правило**
 
-> Вставити скріншот: `reports/screenshots/04_branch_protection.png`
 
 ![Branch protection](screenshots/04_branch_protection.png)
 
@@ -102,12 +99,6 @@ Settings → Branches → Branch protection rules
 
 Це означає, що зміни у папці `internal/` мають відповідального власника коду.
 
-**Скріншот 5 — файл CODEOWNERS**
-
-> Вставити скріншот: `reports/screenshots/05_codeowners.png`
-
-![CODEOWNERS](screenshots/05_codeowners.png)
-
 ---
 
 ## 7. Створення feature-гілки
@@ -121,8 +112,6 @@ git checkout -b feat-improve-logging
 Це відповідає підходу Trunk-based Development, де вся розробка виконується у коротких feature-гілках, які швидко інтегруються назад у `main`.
 
 **Скріншот 6 — створення гілки `feat-improve-logging`**
-
-> Вставити скріншот: `reports/screenshots/06_feature_branch.png`
 
 ![Feature branch](screenshots/06_feature_branch.png)
 
@@ -147,19 +136,13 @@ internal/logging/
 
 **Скріншот 7 — код логера**
 
-> Вставити скріншот: `reports/screenshots/07_logger_code.png`
-
 ![Logger code](screenshots/07_logger_code.png)
 
 **Скріншот 8 — логування у processor**
 
-> Вставити скріншот: `reports/screenshots/08_processor_logging.png`
-
 ![Processor logging](screenshots/08_processor_logging.png)
 
 **Скріншот 9 — запуск сервісу з логами**
-
-> Вставити скріншот: `reports/screenshots/09_service_logs.png`
 
 ![Service logs](screenshots/09_service_logs.png)
 
@@ -174,8 +157,6 @@ go test ./internal/logging -v
 ```
 
 **Скріншот 10 — unit-тест логера**
-
-> Вставити скріншот: `reports/screenshots/10_logger_test.png`
 
 ![Logger test](screenshots/10_logger_test.png)
 
@@ -204,8 +185,6 @@ Lab 4: Improve structured logging
 - оновлено `go.mod` і `go.sum`.
 
 **Скріншот 11 — створений Pull Request**
-
-> Вставити скріншот: `reports/screenshots/11_pull_request.png`
 
 ![Pull Request](screenshots/11_pull_request.png)
 
@@ -237,25 +216,17 @@ nitpick: Please keep an empty line between logger initialization and business lo
 
 **Скріншот 12 — review-коментарі**
 
-> Вставити скріншот: `reports/screenshots/12_review_comments.png`
-
 ![Review comments](screenshots/12_review_comments.png)
 
 **Скріншот 13 — статус `Changes requested`**
-
-> Вставити скріншот: `reports/screenshots/13_changes_requested.png`
 
 ![Changes requested](screenshots/13_changes_requested.png)
 
 **Скріншот 14 — новий комміт із виправленням**
 
-> Вставити скріншот: `reports/screenshots/14_fix_commit.png`
-
 ![Fix commit](screenshots/14_fix_commit.png)
 
 **Скріншот 15 — статус `Approved`**
-
-> Вставити скріншот: `reports/screenshots/15_approved.png`
 
 ![Approved](screenshots/15_approved.png)
 
@@ -282,19 +253,13 @@ git push --force-with-lease
 
 **Скріншот 16 — конфлікт під час rebase**
 
-> Вставити скріншот: `reports/screenshots/16_rebase_conflict.png`
-
 ![Rebase conflict](screenshots/16_rebase_conflict.png)
 
 **Скріншот 17 — вирішення конфлікту**
 
-> Вставити скріншот: `reports/screenshots/17_conflict_resolution.png`
-
 ![Conflict resolution](screenshots/17_conflict_resolution.png)
 
 **Скріншот 18 — успішний rebase**
-
-> Вставити скріншот: `reports/screenshots/18_rebase_success.png`
 
 ![Rebase success](screenshots/18_rebase_success.png)
 
@@ -312,19 +277,13 @@ Squash and merge
 
 **Скріншот 19 — зелений CI перед merge**
 
-> Вставити скріншот: `reports/screenshots/19_green_ci_before_merge.png`
-
 ![Green CI before merge](screenshots/19_green_ci_before_merge.png)
 
 **Скріншот 20 — Squash and merge**
 
-> Вставити скріншот: `reports/screenshots/20_squash_merge.png`
-
 ![Squash merge](screenshots/20_squash_merge.png)
 
 **Скріншот 21 — чиста історія main**
-
-> Вставити скріншот: `reports/screenshots/21_clean_main_history.png`
 
 ![Clean main history](screenshots/21_clean_main_history.png)
 

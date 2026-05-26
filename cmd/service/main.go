@@ -22,7 +22,7 @@ func main() {
 		}
 	}()
 
-	log.Printf("Image Metadata Processor started in %q mode with %d workers", *mode, *workers)
+	log.Printf("Image Metadata Processor started from main branch in %q mode with %d workers", *mode, *workers)
 
 	switch *mode {
 	case "leaky":

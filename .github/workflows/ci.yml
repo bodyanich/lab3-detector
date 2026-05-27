@@ -35,3 +35,13 @@ jobs:
 
       - name: Run tests with race detector
         run: go test -race -v ./...
+
+      - name: Generate coverage profile
+        run: go test -coverprofile=coverage.out ./...
+
+      - name: Check coverage threshold
+        shell: bash
+        run: |
+          total=$(go tool cover -func=coverage.out | grep total | awk '{print substr($3, 1, length($3)-1)}')
+          echo "Total coverage: $total%"
+          awk -v total="$total" 'BEGIN { if (total < 60.0) exit 1 }'

@@ -3,6 +3,7 @@ package processor
 
 import (
 	"fmt"
+	"lab3-detector/internal/storage"
 	"regexp"
 	"strings"
 	"sync"
@@ -21,7 +22,7 @@ var (
 	fixedCacheMu sync.Mutex
 	fixedCache   = make(map[string][]byte)
 
-	imageDataPattern = regexp.MustCompile(`^image_data_\d+_timestamp_\d+$`)
+	imageDataPattern = regexp.MustCompile(`^image_data_(\d+)_timestamp_(\d+)$`)
 
 	processedImages atomic.Uint64
 )
@@ -138,4 +139,38 @@ func storeBounded(key string, value []byte) {
 	}
 
 	fixedCache[key] = value
+}
+
+// ProcessAndStoreMetadata processes image metadata and saves the result.
+func ProcessAndStoreMetadata(imageID string, workerID int, store storage.MetadataStore) error {
+	metadata := storage.Metadata{
+		ImageID:  imageID,
+		WorkerID: workerID,
+		Valid:    imageID != "",
+	}
+
+	if !metadata.Valid {
+		return nil
+	}
+
+	return store.Save(metadata)
+}
+
+// ParsedMetadata contains metadata parsed from image data.
+type ParsedMetadata struct {
+	WorkerID  string
+	Timestamp string
+}
+
+// ParseImageMetadata parses metadata from image data string.
+func ParseImageMetadata(input string) (ParsedMetadata, error) {
+	matches := imageDataPattern.FindStringSubmatch(input)
+	if len(matches) != 3 {
+		return ParsedMetadata{}, fmt.Errorf("invalid image metadata format")
+	}
+
+	return ParsedMetadata{
+		WorkerID:  matches[1],
+		Timestamp: matches[2],
+	}, nil
 }

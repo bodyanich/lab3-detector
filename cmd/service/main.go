@@ -49,15 +49,8 @@ func startMetricsServer() {
 
 	mux.Handle("/metrics", promhttp.Handler())
 
-	mux.HandleFunc("/healthz", func(w http.ResponseWriter, _ *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte("ok"))
-	})
-
-	mux.HandleFunc("/readyz", func(w http.ResponseWriter, _ *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte("ready"))
-	})
+	mux.HandleFunc("/healthz", healthHandler)
+	mux.HandleFunc("/readyz", readyHandler)
 
 	log.Println("metrics server started on http://localhost:2112/metrics")
 	if err := http.ListenAndServe(":2112", mux); err != nil {

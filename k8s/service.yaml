@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: image-processor
+  labels:
+    app: image-processor
+spec:
+  type: ClusterIP
+  selector:
+    app: image-processor
+  ports:
+    - name: metrics
+      port: 2112
+      targetPort: 2112
+    - name: pprof
+      port: 6060
+      targetPort: 6060

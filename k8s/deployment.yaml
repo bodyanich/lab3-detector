@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: image-processor
+  labels:
+    app: image-processor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: image-processor
+  template:
+    metadata:
+      labels:
+        app: image-processor
+    spec:
+      containers:
+        - name: image-processor
+          image: lab3-detector:local
+          imagePullPolicy: IfNotPresent
+          args:
+            - "-mode=fixed"
+            - "-workers=10"
+          ports:
+            - name: metrics
+              containerPort: 2112
+            - name: pprof
+              containerPort: 6060
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 2112
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 2112
+            initialDelaySeconds: 5
+            periodSeconds: 5

@@ -5,44 +5,27 @@ import (
 	"flag"
 	"log"
 	"net/http"
+
 	_ "net/http/pprof"
 
-	"lab3-detector/internal/logging"
 	"lab3-detector/internal/processor"
 
-	"go.uber.org/zap"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
+var version = "dev"
+
 func main() {
-	mode := flag.String("mode", "leaky", "worker mode: leaky or fixed")
-	workers := flag.Int("workers", 5, "number of workers")
+	mode := flag.String("mode", "fixed", "processor mode: leaky or fixed")
+	workers := flag.Int("workers", 5, "number of worker goroutines")
 	flag.Parse()
 
-	logger, err := logging.NewDevelopmentLogger()
-	if err != nil {
-		log.Fatalf("failed to initialize logger: %v", err)
-	}
-	defer func() {
-		if err := logger.Sync(); err != nil {
-			log.Printf("failed to sync logger: %v", err)
-		}
-	}()
+	log.Printf("Image Metadata Processor version: %s", version)
 
-	restoreGlobals := zap.ReplaceGlobals(logger)
-	defer restoreGlobals()
+	go startPprofServer()
+	go startMetricsServer()
 
-	go func() {
-		log.Println("pprof server started on http://localhost:6060/debug/pprof/")
-		if err := http.ListenAndServe("localhost:6060", nil); err != nil {
-			log.Printf("pprof server stopped: %v", err)
-		}
-	}()
-
-	logger.Info(
-		"image metadata processor started",
-		zap.String("mode", *mode),
-		zap.Int("workers", *workers),
-	)
+	log.Printf("Image Metadata Processor started in %q mode with %d workers", *mode, *workers)
 
 	switch *mode {
 	case "leaky":
@@ -50,6 +33,34 @@ func main() {
 	case "fixed":
 		processor.RunFixedWorkerPool(*workers)
 	default:
-		logger.Fatal("unknown worker mode", zap.String("mode", *mode))
+		log.Fatalf("unknown mode: %s", *mode)
+	}
+}
+
+func startPprofServer() {
+	log.Println("pprof server started on http://localhost:6060/debug/pprof/")
+	if err := http.ListenAndServe("localhost:6060", nil); err != nil {
+		log.Printf("pprof server stopped: %v", err)
+	}
+}
+
+func startMetricsServer() {
+	mux := http.NewServeMux()
+
+	mux.Handle("/metrics", promhttp.Handler())
+
+	mux.HandleFunc("/healthz", func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte("ok"))
+	})
+
+	mux.HandleFunc("/readyz", func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte("ready"))
+	})
+
+	log.Println("metrics server started on http://localhost:2112/metrics")
+	if err := http.ListenAndServe(":2112", mux); err != nil {
+		log.Printf("metrics server stopped: %v", err)
 	}
 }

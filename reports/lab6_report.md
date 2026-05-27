@@ -43,8 +43,6 @@ lab3-detector/
 
 **Скріншот 1 — структура проєкту у VS Code**
 
-> Вставити скріншот: `screenshots/01_project_structure.png`
-
 ![Структура проєкту](screenshots/011_project_structure.png)
 
 ---
@@ -64,8 +62,6 @@ go test -v ./internal/processor -run TestProcessAndStoreMetadata
 ```
 
 **Скріншот 2 — успішний запуск mock-тесту**
-
-> Вставити скріншот: `screenshots/02_mock_test.png`
 
 ![Mock-тест](screenshots/02_mock_test.png)
 
@@ -89,8 +85,6 @@ go test -v ./cmd/service -run TestHealthHandler
 
 **Скріншот 3 — успішний httptest**
 
-> Вставити скріншот: `screenshots/03_httptest.png`
-
 ![httptest](screenshots/03_httptest.png)
 
 ---
@@ -112,8 +106,6 @@ go test -v ./internal/processor -run FuzzParseImageMetadata
 ```
 
 **Скріншот 4 — запуск fuzz-тесту**
-
-> Вставити скріншот: `screenshots/04_fuzz_test.png`
 
 ![Fuzz-тест](screenshots/04_fuzz_test.png)
 
@@ -139,8 +131,6 @@ go test ./internal/processor -run=^$ -bench=. -benchmem -count=1
 - `allocs/op` — кількість алокацій на одну операцію.
 
 **Скріншот 5 — benchmark-результати**
-
-> Вставити скріншот: `screenshots/05_benchmark.png`
 
 ![Benchmark](screenshots/05_benchmark.png)
 
@@ -170,8 +160,6 @@ RunFixedWorkerPool
 Вони запускають сервери або нескінченні worker pools, тому для них нормально мати 0.0% у простому unit coverage.
 
 **Скріншот 6 — coverage у GitHub Actions або локально**
-
-> Вставити скріншот: `screenshots/06_coverage_ci.png`
 
 ![Coverage](screenshots/06_coverage_ci.png)
 

@@ -1,0 +1,22 @@
+services:
+  image-processor:
+    build:
+      context: .
+      args:
+        VERSION: "compose-local"
+    image: lab3-detector:compose
+    container_name: image-processor
+    command: ["-mode=fixed", "-workers=10"]
+    ports:
+      - "2112:2112"
+      - "6060:6060"
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    depends_on:
+      - image-processor
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro

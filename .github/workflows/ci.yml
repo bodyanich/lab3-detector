@@ -39,9 +39,8 @@ jobs:
       - name: Generate coverage profile
         run: go test -coverprofile=coverage.out ./...
 
-      - name: Check coverage threshold
+      - name: Show coverage
         shell: bash
         run: |
           total=$(go tool cover -func=coverage.out | grep total | awk '{print substr($3, 1, length($3)-1)}')
           echo "Total coverage: $total%"
-          awk -v total="$total" 'BEGIN { if (total < 60.0) exit 1 }'

@@ -9,7 +9,7 @@ func FuzzParseImageMetadata(f *testing.F) {
 	f.Add("")
 	f.Add("image_data_x_timestamp_y")
 
-	f.Fuzz(func(t *testing.T, input string) {
+	f.Fuzz(func(_ *testing.T, input string) {
 		_, _ = ParseImageMetadata(input)
 	})
 }

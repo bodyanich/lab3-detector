@@ -4,6 +4,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -17,7 +18,11 @@ func main() {
 		fmt.Println("failed to open coverage.out:", err)
 		os.Exit(1)
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			log.Printf("failed to close coverage file: %v", err)
+		}
+	}()
 
 	var total float64
 
